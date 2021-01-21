@@ -412,7 +412,8 @@ function wrapper(strHandoff) {
                 if (!!opts.useNativeNavigation)
                 {
                     var trigger = document.getElementById( 'mp-trigger' );
-                    $(trigger).replaceWith($(trigger).clone().on('click', function () {
+                    $(trigger).replaceWith($(trigger).clone().on('click', function (e) {
+                        e.preventDefault();
                         self.postToNativeApp("navigation_menu");
                     }));
                 }
