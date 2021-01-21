@@ -146,6 +146,10 @@ function wrapper(strHandoff) {
             ajaxNavigation: function (url, blnHidePage) {
                 var $page, callback;
 
+                if (!window.IdaNetwork) {
+                    return "false";
+                }
+                
                 if (blnHidePage) {
                     $page = $('.page');
                     $page.hide();
@@ -162,6 +166,8 @@ function wrapper(strHandoff) {
                         callback: callback
                     }
                 );
+                
+                return "true";
             },
 
             /**
