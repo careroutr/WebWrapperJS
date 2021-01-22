@@ -144,7 +144,7 @@ function wrapper(strHandoff) {
              * Perform native-initiated navigation via ajax call for speed
              */
             ajaxNavigation: function (url, blnHidePage) {
-                var $page, callback;
+                var self = this, $page, callback;
 
                 if (!window.IdaNetwork) {
                     return "false";
@@ -156,6 +156,11 @@ function wrapper(strHandoff) {
 
                     callback = function () {
                         $page.show();
+                        self.postToNativeApp("ajax/loaded");
+                    };
+                } else {
+                    callback = function () {
+                        self.postToNativeApp("ajax/loaded");
                     };
                 }
 
@@ -163,7 +168,9 @@ function wrapper(strHandoff) {
                     'ajax/load',
                     {
                         url: url,
-                        callback: callback
+                        callback: callback,
+                        waitingScreen: true,
+                        // fullPageLoader: true
                     }
                 );
                 
