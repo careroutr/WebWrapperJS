@@ -424,11 +424,13 @@ function wrapper(strHandoff) {
                 
                 if (!!opts.useNativeNavigation)
                 {
-                    var trigger = document.getElementById( 'mp-trigger' );
-                    $(trigger).replaceWith($(trigger).clone().on('click', function (e) {
-                        e.preventDefault();
-                        self.postToNativeApp("navigation_menu");
-                    }));
+                    $.subscribe('ajax/navRefreshed idaMobileApp/load', function () {
+                        var trigger = document.getElementById( 'mp-trigger');
+                        $(trigger).replaceWith($(trigger).clone().on('click', function (e) {
+                            e.preventDefault();
+                            self.postToNativeApp("navigation_menu");
+                        }));       
+                    })
                 }
 
                 //Now that publish is available, notify web JS that app browsing is active
