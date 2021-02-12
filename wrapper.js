@@ -441,7 +441,7 @@ function wrapper(strHandoff) {
                 }, 1);
                 
 
-                $.attachHandlers(
+                $.reAttachHandlers(
                     {
                         /**
                          * Forgot password screen
@@ -494,7 +494,11 @@ function wrapper(strHandoff) {
                          */
                         avoidLogoutScreenOnLoad: {
                             events: 'ajax/load/complete',
-                            method: function () {
+                            method: function (e, opts) {
+                                self.postToNativeApp(
+                                    "ajax/loaded",
+                                    {current_url: window.location.href}
+                                );
                                 self.avoidLogoutScreen();
                             }
                         },
@@ -510,7 +514,8 @@ function wrapper(strHandoff) {
                                 return false;
                             }
                         }
-                    }
+                    },
+                    'idaMobileApp'
                 );
             }
         }
