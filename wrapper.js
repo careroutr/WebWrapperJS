@@ -17,7 +17,6 @@ function wrapper(strHandoff) {
     window.IdaMobileAppBrowsing = window.IdaMobileAppBrowsing || new WebWrapper(JSON.parse(strHandoff));
     
     var fnStart = function (e) {
-        document.documentElement.classList.add('idaMobileLoggedOut');
         window.IdaMobileAppBrowsing.launchApp();
     };
     
@@ -156,11 +155,11 @@ function wrapper(strHandoff) {
 
                     callback = function () {
                         $page.show();
-                        self.postToNativeApp("ajax/loaded");
+                        // self.postToNativeApp("ajax/load/complete", {current_url: window.location.href});
                     };
                 } else {
                     callback = function () {
-                        self.postToNativeApp("ajax/loaded");
+                        // self.postToNativeApp("ajax/load/complete", {current_url: window.location.href});
                     };
                 }
 
@@ -347,6 +346,8 @@ function wrapper(strHandoff) {
             launchApp: function () {
                 var self = this;
 
+                document.documentElement.classList.add('idaMobileLoggedOut');
+
                 //Ensures that login screen doesn't get shown if token renewal error
                 self.avoidLogoutScreen();
 
@@ -490,19 +491,6 @@ function wrapper(strHandoff) {
                             }
                         },
                         /**
-                         * Re-run the logout screen check on any ajax load
-                         */
-                        avoidLogoutScreenOnLoad: {
-                            events: 'ajax/load/complete',
-                            method: function (e, opts) {
-                                self.postToNativeApp(
-                                    "ajax/loaded",
-                                    {current_url: window.location.href}
-                                );
-                                self.avoidLogoutScreen();
-                            }
-                        },
-                        /**
                          * Make contextmenu action (longpress) act like a tap
                          */
                         touchLongPress: {
@@ -515,8 +503,21 @@ function wrapper(strHandoff) {
                             }
                         }
                     },
-                    'idaMobileApp'
+                    'idaMobileApp',
+                    $('body')
                 );
+
+                $.unsubscribe('ajax/load/complete.idaMobileApp')
+                $.subscribe('ajax/load/complete.idaMobileApp', function (e, opts) {
+                    //Notify native app whenever ajax load completed
+                    self.postToNativeApp(
+                        "ajax/load/complete",
+                        {current_url: window.location.href}
+                    );
+                    
+                    //Check for logout screen after ajaxing
+                    self.avoidLogoutScreen();
+                });
             }
         }
     }
