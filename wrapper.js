@@ -182,7 +182,7 @@ function wrapper(strHandoff) {
              * NOTE this does not reset cached assets, that is handled in IdaNetwork (web JS)
              */
             updatePage: function () {
-                if (!window.iDialogs || !window.IdaNetwork) { return; }
+                if (!window.iDialogs || !window.IdaNetwork) { return "false"; }
 
                 //Refresh sub navigations
                 if (window.IdaNetwork.getSubNav) {
@@ -200,6 +200,8 @@ function wrapper(strHandoff) {
                         window.iDialogs.methods.updateThisPage('');
                     }
                 }
+                
+                return "true"
             },
 
             /**
